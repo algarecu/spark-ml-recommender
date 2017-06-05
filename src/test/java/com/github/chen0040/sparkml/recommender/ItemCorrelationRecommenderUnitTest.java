@@ -15,7 +15,7 @@ import java.util.List;
 public class ItemCorrelationRecommenderUnitTest {
 
    @Test
-   public void test(){
+   public void test_recommender(){
       JavaSparkContext context = SparkContextFactory.createSparkContext("testing-1");
 
       Table table =new Table();
@@ -43,7 +43,7 @@ public class ItemCorrelationRecommenderUnitTest {
 
       List<ItemCorrelation> predicted = output.collect();
       for(ItemCorrelation cell : predicted){
-         System.out.println("predict(" + cell.getItem1() + ", " + cell.getItem2() + "): " + cell.getPearson());
+         System.out.println("movie-correlation(" + cell.getItem1() + ", " + cell.getItem2() + "): " + cell.getPearson());
       }
    }
 }
