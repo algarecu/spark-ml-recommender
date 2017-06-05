@@ -511,19 +511,12 @@
             <version>1.0.9</version>
         </dependency>
 
+
         <dependency>
             <groupId>com.github.chen0040</groupId>
-            <artifactId>java-data-image</artifactId>
-            <version>1.0.2</version>
-            <scope>test</scope>
+            <artifactId>spark-ml-commons</artifactId>
+            <version>1.0.1</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-        </dependency>
-
-
 
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -540,15 +533,6 @@
                     <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
-            <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>net.lingala.zip4j</groupId>
-            <artifactId>zip4j</artifactId>
-            <version>1.3.2</version>
-        </dependency>
-
-
     </dependencies>
 </project>
