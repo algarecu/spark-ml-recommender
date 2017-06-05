@@ -8,13 +8,11 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static org.testng.Assert.*;
-
 
 /**
  * Created by xschen on 5/6/2017.
  */
-public class PearsonCorrelationRecommenderUnitTest {
+public class ItemCorrelationRecommenderUnitTest {
 
    @Test
    public void test(){
@@ -39,12 +37,12 @@ public class PearsonCorrelationRecommenderUnitTest {
 
       JavaRDD<TableCell> input = context.parallelize(table.getCells());
 
-      PearsonCorrelationRecommender recommender = new PearsonCorrelationRecommender();
+      ItemCorrelationRecommender recommender = new ItemCorrelationRecommender();
 
-      JavaRDD<ItemSimilarity> output = recommender.fitAndTransform(input);
+      JavaRDD<ItemCorrelation> output = recommender.fitAndTransform(input);
 
-      List<ItemSimilarity> predicted = output.collect();
-      for(ItemSimilarity cell : predicted){
+      List<ItemCorrelation> predicted = output.collect();
+      for(ItemCorrelation cell : predicted){
          System.out.println("predict(" + cell.getItem1() + ", " + cell.getItem2() + "): " + cell.getPearson());
       }
    }

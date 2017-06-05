@@ -14,9 +14,9 @@ import java.util.List;
 /**
  * Created by xschen on 5/6/2017.
  */
-public class PearsonCorrelationRecommender {
+public class ItemCorrelationRecommender {
 
-   public JavaRDD<ItemSimilarity> fitAndTransform(JavaRDD<TableCell> cells){
+   public JavaRDD<ItemCorrelation> fitAndTransform(JavaRDD<TableCell> cells){
       JavaPairRDD<String, Tuple2<String, Double>> rdd2 = cells.mapToPair(cell -> {
 
             String user = cell.getColumnName();
@@ -116,7 +116,7 @@ public class PearsonCorrelationRecommender {
             double jaccard = (double)N / (maxNumRaters1 + maxNumRaters2 - N);
             double cosine = sumRatingProd / (Math.sqrt(sumSqrRating1) * Math.sqrt(sumSqrRating2));
 
-            ItemSimilarity result = new ItemSimilarity();
+            ItemCorrelation result = new ItemCorrelation();
             result.setCosine(cosine);
             result.setPearson(pearson);
             result.setJaccard(jaccard);
