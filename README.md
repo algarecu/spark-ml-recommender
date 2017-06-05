@@ -21,7 +21,7 @@ Add the following dependency to your POM file:
 
 # Usage
 
-* Predict missing ratings 
+## Predict missing ratings 
 
 The sample code below tries to predict the missing rating of [user, movie] as shown in the table below:
 
@@ -61,7 +61,9 @@ for(UserItemRating cell : predicted){
 }
 ```
 
-* To find the correlation between any two movies using user rating:
+## To find the correlation between any two movies using user rating:
+
+The sample code below tries to find the correlation between items rated by users. Can be used for scenario such as "Customer who bought this also bought"
 
 ```java
 JavaSparkContext context = SparkContextFactory.createSparkContext("testing-1");
