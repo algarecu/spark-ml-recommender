@@ -7,6 +7,18 @@ Package provides java implementation of big-data recommend-er using Apache Spark
 * Collaborative filtering recommender that predicts user's preference on unknown items on ALS (Alternating Least Squares)-based gradient descent
 * Recommender that computes the correlation / similarity between items based on user preference using Pearson / Cosine / Jaccard correlation coefficient
 
+# Install
+
+Add the following dependency to your POM file:
+
+```xml
+<dependency>
+  <groupId>com.github.chen0040</groupId>
+  <artifactId>spark-ml-recommender</artifactId>
+  <version>1.0.1</version>
+</dependency>
+```
+
 # Usage
 
 * Predict missing ratings 
@@ -35,7 +47,7 @@ table.addRating("Love at last", "Dave", 0);
 table.addRating("Remance forever", "Dave", 0);
 table.addRating("Nonstop car chases", "Dave", 4);
 
-JavaRDD<UserItemRating> input = context.parallelize(table.getCells());
+JavaRDD<UserItemRating> input = context.parallelize(table.getRatings());
 
 CFRecommender recommender = new CFRecommender();
 recommender.setMaxIterations(50);
@@ -71,7 +83,7 @@ table.addRating("Love at last", "Dave", 0);
 table.addRating("Remance forever", "Dave", 0);
 table.addRating("Nonstop car chases", "Dave", 4);
 
-JavaRDD<UserItemRating> input = context.parallelize(table.getCells());
+JavaRDD<UserItemRating> input = context.parallelize(table.getRatings());
 
 ItemCorrelationRecommender recommender = new ItemCorrelationRecommender();
 

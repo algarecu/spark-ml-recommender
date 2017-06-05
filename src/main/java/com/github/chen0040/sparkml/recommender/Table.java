@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Getter
 public class Table {
-   private List<UserItemRating> cells  = new ArrayList<>();
+   private List<UserItemRating> ratings = new ArrayList<>();
 
    public Table() {
 
@@ -23,7 +23,7 @@ public class Table {
       cell.setItem(item);
       cell.setUser(user);
       cell.setValue(value);
-      cells.add(cell);
+      ratings.add(cell);
    }
 
 

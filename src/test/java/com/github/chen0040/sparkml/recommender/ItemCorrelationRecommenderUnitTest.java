@@ -35,7 +35,7 @@ public class ItemCorrelationRecommenderUnitTest {
       table.addRating("Remance forever", "Dave", 0);
       table.addRating("Nonstop car chases", "Dave", 4);
 
-      JavaRDD<UserItemRating> input = context.parallelize(table.getCells());
+      JavaRDD<UserItemRating> input = context.parallelize(table.getRatings());
 
       ItemCorrelationRecommender recommender = new ItemCorrelationRecommender();
 
