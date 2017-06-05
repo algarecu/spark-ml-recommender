@@ -12,14 +12,14 @@ import java.util.List;
  */
 @Getter
 public class Table {
-   private List<TableCell> cells  = new ArrayList<>();
+   private List<UserItemRating> cells  = new ArrayList<>();
 
    public Table() {
 
    }
 
-   public void addCell(String item, String user, double value) {
-      TableCell cell =new TableCell();
+   public void addRating(String item, String user, double value) {
+      UserItemRating cell =new UserItemRating();
       cell.setItem(item);
       cell.setUser(user);
       cell.setValue(value);

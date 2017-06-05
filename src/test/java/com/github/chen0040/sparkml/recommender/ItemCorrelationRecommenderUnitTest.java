@@ -19,23 +19,23 @@ public class ItemCorrelationRecommenderUnitTest {
       JavaSparkContext context = SparkContextFactory.createSparkContext("testing-1");
 
       Table table =new Table();
-      table.addCell("Love at last", "Alice", 5);
-      table.addCell("Remance forever", "Alice", 5);
-      table.addCell("Nonstop car chases", "Alice", 0);
-      table.addCell("Sword vs. karate", "Alice", 0);
-      table.addCell("Love at last", "Bob", 5);
-      table.addCell("Cute puppies of love", "Bob", 4);
-      table.addCell("Nonstop car chases", "Bob", 0);
-      table.addCell("Sword vs. karate", "Bob", 0);
-      table.addCell("Love at last", "Carol", 0);
-      table.addCell("Cute puppies of love", "Carol", 0);
-      table.addCell("Nonstop car chases", "Carol", 5);
-      table.addCell("Sword vs. karate", "Carol", 5);
-      table.addCell("Love at last", "Dave", 0);
-      table.addCell("Remance forever", "Dave", 0);
-      table.addCell("Nonstop car chases", "Dave", 4);
+      table.addRating("Love at last", "Alice", 5);
+      table.addRating("Remance forever", "Alice", 5);
+      table.addRating("Nonstop car chases", "Alice", 0);
+      table.addRating("Sword vs. karate", "Alice", 0);
+      table.addRating("Love at last", "Bob", 5);
+      table.addRating("Cute puppies of love", "Bob", 4);
+      table.addRating("Nonstop car chases", "Bob", 0);
+      table.addRating("Sword vs. karate", "Bob", 0);
+      table.addRating("Love at last", "Carol", 0);
+      table.addRating("Cute puppies of love", "Carol", 0);
+      table.addRating("Nonstop car chases", "Carol", 5);
+      table.addRating("Sword vs. karate", "Carol", 5);
+      table.addRating("Love at last", "Dave", 0);
+      table.addRating("Remance forever", "Dave", 0);
+      table.addRating("Nonstop car chases", "Dave", 4);
 
-      JavaRDD<TableCell> input = context.parallelize(table.getCells());
+      JavaRDD<UserItemRating> input = context.parallelize(table.getCells());
 
       ItemCorrelationRecommender recommender = new ItemCorrelationRecommender();
 

@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-public class TableCell implements Serializable {
+public class UserItemRating implements Serializable {
    private static final long serialVersionUID = 8246834031829454204L;
 
    private String item = "";

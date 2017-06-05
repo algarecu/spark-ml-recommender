@@ -28,14 +28,14 @@ public class CFRecommender {
    private Integer featureCount = 2;
    private int partitionCount  = 100;
 
-   public JavaRDD<TableCell> fitAndTransform(JavaRDD<TableCell> cells){
+   public JavaRDD<UserItemRating> fitAndTransform(JavaRDD<UserItemRating> cells){
       JavaSparkContext context = JavaSparkContext.fromSparkContext(cells.context());
 
       Broadcast<Double> alphaBroadcast = context.broadcast(alpha);
       Broadcast<Double> lambdaBroadcast = context.broadcast(lambda);
       Broadcast<Integer> featureCountBroadcast = context.broadcast(featureCount);
 
-      JavaPairRDD<String, Theta> thetaRdd = cells.map(TableCell::getUser).distinct().mapToPair(columnName -> {
+      JavaPairRDD<String, Theta> thetaRdd = cells.map(UserItemRating::getUser).distinct().mapToPair(columnName -> {
          int fc = featureCountBroadcast.value();
          Theta theta = new Theta();
          Random random = new Random();
@@ -50,7 +50,7 @@ public class CFRecommender {
          return new Tuple2<>(columnName, theta);
       }).coalesce(partitionCount).cache();
 
-      JavaPairRDD<String, X> xRdd = cells.map(TableCell::getItem).distinct().mapToPair(rowName -> {
+      JavaPairRDD<String, X> xRdd = cells.map(UserItemRating::getItem).distinct().mapToPair(rowName -> {
          int fc = featureCountBroadcast.value();
          X x = new X();
          x.setRowName(rowName);
@@ -65,13 +65,13 @@ public class CFRecommender {
          return new Tuple2<>(rowName, x);
       }).coalesce(partitionCount).cache();
 
-      JavaPairRDD<String, TableCell> rowRadd = cells.mapToPair(cell -> new Tuple2<>(cell.getItem(), cell)).coalesce(partitionCount).cache();
-      JavaPairRDD<String, TableCell> colRadd = cells.mapToPair(cell -> new Tuple2<>(cell.getUser(), cell)).coalesce(partitionCount).cache();
+      JavaPairRDD<String, UserItemRating> rowRadd = cells.mapToPair(cell -> new Tuple2<>(cell.getItem(), cell)).coalesce(partitionCount).cache();
+      JavaPairRDD<String, UserItemRating> colRadd = cells.mapToPair(cell -> new Tuple2<>(cell.getUser(), cell)).coalesce(partitionCount).cache();
 
       for(int iterations=0; iterations < maxIterations; ++iterations){
 
-         JavaPairRDD<String, Tuple2<TableCell, X>> rdd1 = rowRadd.leftOuterJoin(xRdd).mapToPair(tuple2 -> {
-            TableCell cell = tuple2._2()._1();
+         JavaPairRDD<String, Tuple2<UserItemRating, X>> rdd1 = rowRadd.leftOuterJoin(xRdd).mapToPair(tuple2 -> {
+            UserItemRating cell = tuple2._2()._1();
             X x = tuple2._2()._2().get();
             String columnName = cell.getUser();
             return new Tuple2<>(columnName, new Tuple2<>(cell, x));
@@ -80,7 +80,7 @@ public class CFRecommender {
          // theta least square
          thetaRdd = rdd1.leftOuterJoin(thetaRdd).mapValues(a -> {
             Theta theta = a._2().get();
-            TableCell cell = a._1()._1();
+            UserItemRating cell = a._1()._1();
             X x = a._1()._2();
             double h = x.dotProduct(theta);
             double[] dTheta = new double[theta.size()];
@@ -118,8 +118,8 @@ public class CFRecommender {
 
          thetaRdd.count();
 
-         JavaPairRDD<String, Tuple2<TableCell, Theta>> rdd2 = colRadd.leftOuterJoin(thetaRdd).mapToPair(tuple2 ->{
-            TableCell cell = tuple2._2()._1();
+         JavaPairRDD<String, Tuple2<UserItemRating, Theta>> rdd2 = colRadd.leftOuterJoin(thetaRdd).mapToPair(tuple2 ->{
+            UserItemRating cell = tuple2._2()._1();
             Theta theta = tuple2._2()._2().get();
             String columnName = cell.getItem();
             return new Tuple2<>(columnName, new Tuple2<>(cell, theta));
@@ -128,7 +128,7 @@ public class CFRecommender {
          // theta least square
          xRdd = rdd2.leftOuterJoin(xRdd).mapValues(a -> {
             X x = a._2().get();
-            TableCell cell = a._1()._1();
+            UserItemRating cell = a._1()._1();
             Theta theta = a._1()._2();
             double h = x.dotProduct(theta);
             double[] dX = new double[x.size()];
@@ -172,7 +172,7 @@ public class CFRecommender {
          Theta theta = tuple2._1();
          X x = tuple2._2();
          double predicted = x.dotProduct(theta);
-         TableCell cell = new TableCell();
+         UserItemRating cell = new UserItemRating();
          cell.setUser(theta.getColumnName());
          cell.setItem(x.getRowName());
          cell.setValue(predicted);
