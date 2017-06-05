@@ -45,7 +45,7 @@ public class CFRecommenderUnitTest {
 
       List<TableCell> predicted = output.collect();
       for(TableCell cell : predicted){
-         System.out.println("predict(" + cell.getRowName() + ", " + cell.getColumnName() + "): " + cell.getValue());
+         System.out.println("predict(" + cell.getItem() + ", " + cell.getUser() + "): " + cell.getValue());
       }
    }
 }

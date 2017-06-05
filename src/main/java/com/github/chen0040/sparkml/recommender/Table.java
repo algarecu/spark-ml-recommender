@@ -2,8 +2,6 @@ package com.github.chen0040.sparkml.recommender;
 
 
 import lombok.Getter;
-import scala.Tuple2;
-import org.apache.spark.api.java.JavaRDD;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +18,10 @@ public class Table {
 
    }
 
-   public void addCell(String rowName, String columnName, double value) {
+   public void addCell(String item, String user, double value) {
       TableCell cell =new TableCell();
-      cell.setRowName(rowName);
-      cell.setColumnName(columnName);
+      cell.setItem(item);
+      cell.setUser(user);
       cell.setValue(value);
       cells.add(cell);
    }

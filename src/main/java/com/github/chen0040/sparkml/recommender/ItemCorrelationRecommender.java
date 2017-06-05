@@ -19,8 +19,8 @@ public class ItemCorrelationRecommender {
    public JavaRDD<ItemCorrelation> fitAndTransform(JavaRDD<TableCell> cells){
       JavaPairRDD<String, Tuple2<String, Double>> rdd2 = cells.mapToPair(cell -> {
 
-            String user = cell.getColumnName();
-            String movie = cell.getRowName();
+            String user = cell.getUser();
+            String movie = cell.getItem();
             double rating = cell.getValue();
             return new Tuple2<>(user, new Tuple2<>(movie, rating));
          });

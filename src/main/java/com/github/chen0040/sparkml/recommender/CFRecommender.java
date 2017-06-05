@@ -3,7 +3,6 @@ package com.github.chen0040.sparkml.recommender;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -36,7 +35,7 @@ public class CFRecommender {
       Broadcast<Double> lambdaBroadcast = context.broadcast(lambda);
       Broadcast<Integer> featureCountBroadcast = context.broadcast(featureCount);
 
-      JavaPairRDD<String, Theta> thetaRdd = cells.map(TableCell::getColumnName).distinct().mapToPair(columnName -> {
+      JavaPairRDD<String, Theta> thetaRdd = cells.map(TableCell::getUser).distinct().mapToPair(columnName -> {
          int fc = featureCountBroadcast.value();
          Theta theta = new Theta();
          Random random = new Random();
@@ -51,7 +50,7 @@ public class CFRecommender {
          return new Tuple2<>(columnName, theta);
       }).coalesce(partitionCount).cache();
 
-      JavaPairRDD<String, X> xRdd = cells.map(TableCell::getRowName).distinct().mapToPair(rowName -> {
+      JavaPairRDD<String, X> xRdd = cells.map(TableCell::getItem).distinct().mapToPair(rowName -> {
          int fc = featureCountBroadcast.value();
          X x = new X();
          x.setRowName(rowName);
@@ -66,15 +65,15 @@ public class CFRecommender {
          return new Tuple2<>(rowName, x);
       }).coalesce(partitionCount).cache();
 
-      JavaPairRDD<String, TableCell> rowRadd = cells.mapToPair(cell -> new Tuple2<>(cell.getRowName(), cell)).coalesce(partitionCount).cache();
-      JavaPairRDD<String, TableCell> colRadd = cells.mapToPair(cell -> new Tuple2<>(cell.getColumnName(), cell)).coalesce(partitionCount).cache();
+      JavaPairRDD<String, TableCell> rowRadd = cells.mapToPair(cell -> new Tuple2<>(cell.getItem(), cell)).coalesce(partitionCount).cache();
+      JavaPairRDD<String, TableCell> colRadd = cells.mapToPair(cell -> new Tuple2<>(cell.getUser(), cell)).coalesce(partitionCount).cache();
 
       for(int iterations=0; iterations < maxIterations; ++iterations){
 
          JavaPairRDD<String, Tuple2<TableCell, X>> rdd1 = rowRadd.leftOuterJoin(xRdd).mapToPair(tuple2 -> {
             TableCell cell = tuple2._2()._1();
             X x = tuple2._2()._2().get();
-            String columnName = cell.getColumnName();
+            String columnName = cell.getUser();
             return new Tuple2<>(columnName, new Tuple2<>(cell, x));
          });
 
@@ -122,7 +121,7 @@ public class CFRecommender {
          JavaPairRDD<String, Tuple2<TableCell, Theta>> rdd2 = colRadd.leftOuterJoin(thetaRdd).mapToPair(tuple2 ->{
             TableCell cell = tuple2._2()._1();
             Theta theta = tuple2._2()._2().get();
-            String columnName = cell.getRowName();
+            String columnName = cell.getItem();
             return new Tuple2<>(columnName, new Tuple2<>(cell, theta));
          });
 
@@ -174,8 +173,8 @@ public class CFRecommender {
          X x = tuple2._2();
          double predicted = x.dotProduct(theta);
          TableCell cell = new TableCell();
-         cell.setColumnName(theta.getColumnName());
-         cell.setRowName(x.getRowName());
+         cell.setUser(theta.getColumnName());
+         cell.setItem(x.getRowName());
          cell.setValue(predicted);
          return cell;
       });

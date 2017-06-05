@@ -15,8 +15,8 @@ import java.io.Serializable;
 public class TableCell implements Serializable {
    private static final long serialVersionUID = 8246834031829454204L;
 
-   private String rowName = "";
-   private String columnName = "";
+   private String item = "";
+   private String user = "";
 
    private double value;
 }
