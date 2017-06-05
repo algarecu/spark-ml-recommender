@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class PearsonCorrelationRecommender {
 
-   public void fitAndTransform(JavaRDD<TableCell> cells){
+   public JavaRDD<ItemSimilarity> fitAndTransform(JavaRDD<TableCell> cells){
       JavaPairRDD<String, Tuple2<String, Double>> rdd2 = cells.mapToPair(cell -> {
 
             String user = cell.getColumnName();
@@ -84,7 +84,7 @@ public class PearsonCorrelationRecommender {
             return moviePair._1().compareTo(moviePair._2()) < 0;
          });
 
-      JavaRDD<ItemSimilarity> rdd8 = rdd7.map(t -> {
+      return rdd7.map(t -> {
 
          Iterable<Tuple7<Double, Double, Integer, Integer, Double, Double, Double>> s = t._2();
          Tuple2<String, String> movie_pair = t._1();
