@@ -17,7 +17,7 @@ import java.util.Random;
 
 /**
  * Created by xschen on 5/6/2017.
- * content collaborative filtering recommend-er using ALS (Alternating Least Square) stochastic gradient descent
+ * content collaborative filtering recommend-er using ALS (Alternating Least Square) gradient descent
  */
 @Getter
 @Setter
