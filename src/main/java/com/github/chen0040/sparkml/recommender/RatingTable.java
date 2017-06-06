@@ -11,10 +11,10 @@ import java.util.List;
  * Created by xschen on 5/6/2017.
  */
 @Getter
-public class Table {
+public class RatingTable {
    private List<UserItemRating> ratings = new ArrayList<>();
 
-   public Table() {
+   public RatingTable() {
 
    }
 

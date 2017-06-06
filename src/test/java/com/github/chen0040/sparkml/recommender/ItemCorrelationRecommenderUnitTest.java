@@ -18,24 +18,24 @@ public class ItemCorrelationRecommenderUnitTest {
    public void test_recommender(){
       JavaSparkContext context = SparkContextFactory.createSparkContext("testing-1");
 
-      Table table =new Table();
-      table.addRating("Love at last", "Alice", 5);
-      table.addRating("Remance forever", "Alice", 5);
-      table.addRating("Nonstop car chases", "Alice", 0);
-      table.addRating("Sword vs. karate", "Alice", 0);
-      table.addRating("Love at last", "Bob", 5);
-      table.addRating("Cute puppies of love", "Bob", 4);
-      table.addRating("Nonstop car chases", "Bob", 0);
-      table.addRating("Sword vs. karate", "Bob", 0);
-      table.addRating("Love at last", "Carol", 0);
-      table.addRating("Cute puppies of love", "Carol", 0);
-      table.addRating("Nonstop car chases", "Carol", 5);
-      table.addRating("Sword vs. karate", "Carol", 5);
-      table.addRating("Love at last", "Dave", 0);
-      table.addRating("Remance forever", "Dave", 0);
-      table.addRating("Nonstop car chases", "Dave", 4);
+      RatingTable ratingTable =new RatingTable();
+      ratingTable.addRating("Love at last", "Alice", 5);
+      ratingTable.addRating("Remance forever", "Alice", 5);
+      ratingTable.addRating("Nonstop car chases", "Alice", 0);
+      ratingTable.addRating("Sword vs. karate", "Alice", 0);
+      ratingTable.addRating("Love at last", "Bob", 5);
+      ratingTable.addRating("Cute puppies of love", "Bob", 4);
+      ratingTable.addRating("Nonstop car chases", "Bob", 0);
+      ratingTable.addRating("Sword vs. karate", "Bob", 0);
+      ratingTable.addRating("Love at last", "Carol", 0);
+      ratingTable.addRating("Cute puppies of love", "Carol", 0);
+      ratingTable.addRating("Nonstop car chases", "Carol", 5);
+      ratingTable.addRating("Sword vs. karate", "Carol", 5);
+      ratingTable.addRating("Love at last", "Dave", 0);
+      ratingTable.addRating("Remance forever", "Dave", 0);
+      ratingTable.addRating("Nonstop car chases", "Dave", 4);
 
-      JavaRDD<UserItemRating> input = context.parallelize(table.getRatings());
+      JavaRDD<UserItemRating> input = context.parallelize(ratingTable.getRatings());
 
       ItemCorrelationRecommender recommender = new ItemCorrelationRecommender();
 

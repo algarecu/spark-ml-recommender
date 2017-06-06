@@ -6,6 +6,7 @@ Package provides java implementation of big-data recommend-er using Apache Spark
 
 * Collaborative filtering recommender that predicts user's preference on unknown items on ALS (Alternating Least Squares)-based gradient descent
 * Recommender that computes the correlation / similarity between items based on user preference using Pearson / Cosine / Jaccard correlation coefficient
+* Recommender that recommends a common friend between two persons who do not know each other but like to know each other
 
 # Install
 
@@ -15,7 +16,7 @@ Add the following dependency to your POM file:
 <dependency>
   <groupId>com.github.chen0040</groupId>
   <artifactId>spark-ml-recommender</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 
@@ -23,31 +24,31 @@ Add the following dependency to your POM file:
 
 ## Predict missing ratings 
 
-The sample code below tries to predict the missing rating of [user, movie] as shown in the table below:
+The sample code below tries to predict the missing rating of [user, movie] as shown in the ratingTable below:
 
 ![movie-recommender](images/movie-recommender.png)
 
 ```java
 JavaSparkContext context = SparkContextFactory.createSparkContext("testing-1");
 
-Table table =new Table();
-table.addRating("Love at last", "Alice", 5);
-table.addRating("Remance forever", "Alice", 5);
-table.addRating("Nonstop car chases", "Alice", 0);
-table.addRating("Sword vs. karate", "Alice", 0);
-table.addRating("Love at last", "Bob", 5);
-table.addRating("Cute puppies of love", "Bob", 4);
-table.addRating("Nonstop car chases", "Bob", 0);
-table.addRating("Sword vs. karate", "Bob", 0);
-table.addRating("Love at last", "Carol", 0);
-table.addRating("Cute puppies of love", "Carol", 0);
-table.addRating("Nonstop car chases", "Carol", 5);
-table.addRating("Sword vs. karate", "Carol", 5);
-table.addRating("Love at last", "Dave", 0);
-table.addRating("Remance forever", "Dave", 0);
-table.addRating("Nonstop car chases", "Dave", 4);
+RatingTable ratingTable =new RatingTable();
+ratingTable.addRating("Love at last", "Alice", 5);
+ratingTable.addRating("Remance forever", "Alice", 5);
+ratingTable.addRating("Nonstop car chases", "Alice", 0);
+ratingTable.addRating("Sword vs. karate", "Alice", 0);
+ratingTable.addRating("Love at last", "Bob", 5);
+ratingTable.addRating("Cute puppies of love", "Bob", 4);
+ratingTable.addRating("Nonstop car chases", "Bob", 0);
+ratingTable.addRating("Sword vs. karate", "Bob", 0);
+ratingTable.addRating("Love at last", "Carol", 0);
+ratingTable.addRating("Cute puppies of love", "Carol", 0);
+ratingTable.addRating("Nonstop car chases", "Carol", 5);
+ratingTable.addRating("Sword vs. karate", "Carol", 5);
+ratingTable.addRating("Love at last", "Dave", 0);
+ratingTable.addRating("Remance forever", "Dave", 0);
+ratingTable.addRating("Nonstop car chases", "Dave", 4);
 
-JavaRDD<UserItemRating> input = context.parallelize(table.getRatings());
+JavaRDD<UserItemRating> input = context.parallelize(ratingTable.getRatings());
 
 CFRecommender recommender = new CFRecommender();
 recommender.setMaxIterations(50);
@@ -68,24 +69,24 @@ The sample code below tries to find the correlation between items rated by users
 ```java
 JavaSparkContext context = SparkContextFactory.createSparkContext("testing-1");
 
-Table table =new Table();
-table.addRating("Love at last", "Alice", 5);
-table.addRating("Remance forever", "Alice", 5);
-table.addRating("Nonstop car chases", "Alice", 0);
-table.addRating("Sword vs. karate", "Alice", 0);
-table.addRating("Love at last", "Bob", 5);
-table.addRating("Cute puppies of love", "Bob", 4);
-table.addRating("Nonstop car chases", "Bob", 0);
-table.addRating("Sword vs. karate", "Bob", 0);
-table.addRating("Love at last", "Carol", 0);
-table.addRating("Cute puppies of love", "Carol", 0);
-table.addRating("Nonstop car chases", "Carol", 5);
-table.addRating("Sword vs. karate", "Carol", 5);
-table.addRating("Love at last", "Dave", 0);
-table.addRating("Remance forever", "Dave", 0);
-table.addRating("Nonstop car chases", "Dave", 4);
+RatingTable ratingTable =new RatingTable();
+ratingTable.addRating("Love at last", "Alice", 5);
+ratingTable.addRating("Remance forever", "Alice", 5);
+ratingTable.addRating("Nonstop car chases", "Alice", 0);
+ratingTable.addRating("Sword vs. karate", "Alice", 0);
+ratingTable.addRating("Love at last", "Bob", 5);
+ratingTable.addRating("Cute puppies of love", "Bob", 4);
+ratingTable.addRating("Nonstop car chases", "Bob", 0);
+ratingTable.addRating("Sword vs. karate", "Bob", 0);
+ratingTable.addRating("Love at last", "Carol", 0);
+ratingTable.addRating("Cute puppies of love", "Carol", 0);
+ratingTable.addRating("Nonstop car chases", "Carol", 5);
+ratingTable.addRating("Sword vs. karate", "Carol", 5);
+ratingTable.addRating("Love at last", "Dave", 0);
+ratingTable.addRating("Remance forever", "Dave", 0);
+ratingTable.addRating("Nonstop car chases", "Dave", 4);
 
-JavaRDD<UserItemRating> input = context.parallelize(table.getRatings());
+JavaRDD<UserItemRating> input = context.parallelize(ratingTable.getRatings());
 
 ItemCorrelationRecommender recommender = new ItemCorrelationRecommender();
 
