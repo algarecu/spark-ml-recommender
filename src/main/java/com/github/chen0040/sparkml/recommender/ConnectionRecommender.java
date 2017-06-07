@@ -13,9 +13,9 @@ import java.util.*;
 /**
  * Created by xschen on 22/2/2016.
  */
-public class LinkRecommender {
+public class ConnectionRecommender {
 
-   public JavaRDD<FriendLinkRecommendation> fitAndTransform(JavaRDD<FriendAdjList> rdd) {
+   public JavaRDD<ConnectionRecommendation> fitAndTransform(JavaRDD<Connection> rdd) {
 
 
       JavaPairRDD<String, Tuple2<String, String>> rdd1 = rdd.flatMapToPair( s -> {
@@ -107,17 +107,17 @@ public class LinkRecommender {
          String person1 = tuple2._1();
          Map<String, Set<String>> links = tuple2._2();
 
-         List<FriendLinkRecommendation> result = new ArrayList<>();
+         List<ConnectionRecommendation> result = new ArrayList<>();
          for(Map.Entry<String, Set<String>> entry : links.entrySet()){
             String person2 = entry.getKey();
             Set<String> commonFriends = entry.getValue();
-            FriendLinkRecommendation link = new FriendLinkRecommendation();
+            ConnectionRecommendation link = new ConnectionRecommendation();
             link.setPerson1(person1);
             link.setPerson2(person2);
             link.setCommonFriends(commonFriends);
             result.add(link);
          }
          return result;
-      });
+      }).filter(r -> r.getCommonFriends() != null);
    }
 }

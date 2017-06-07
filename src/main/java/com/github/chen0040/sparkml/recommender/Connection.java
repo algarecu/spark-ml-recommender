@@ -14,7 +14,17 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class FriendAdjList implements Serializable {
+public class Connection implements Serializable {
    private String person;
    private List<String> hisFriends = new ArrayList<>();
+
+   public Connection(){
+
+   }
+
+   public Connection(String person, List<String> friends) {
+      this.person = person;
+      this.hisFriends = friends;
+   }
+
 }

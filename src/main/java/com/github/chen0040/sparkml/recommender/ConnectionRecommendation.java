@@ -13,7 +13,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class FriendLinkRecommendation {
+public class ConnectionRecommendation {
    private String person1;
    private String person2;
    private Set<String> commonFriends = new HashSet<>();
