@@ -6,7 +6,7 @@ Package provides java implementation of big-data recommend-er using Apache Spark
 
 * Collaborative filtering recommender that predicts user's preference on unknown items using ALS-based gradient descent
 * Recommender that computes the correlation / similarity between items based on user preference using Pearson / Cosine / Jaccard correlation coefficient
-* Recommender that recommends a common friend between two persons who do not know each other but like to know each other (something similar to linkedIn connection)
+* Recommender that recommends a common friend to connect two persons who do not know each other but like to know each other (something similar to linkedIn connection)
 
 # Install
 
@@ -16,7 +16,7 @@ Add the following dependency to your POM file:
 <dependency>
   <groupId>com.github.chen0040</groupId>
   <artifactId>spark-ml-recommender</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
 </dependency>
 ```
 
@@ -95,5 +95,28 @@ JavaRDD<ItemCorrelation> output = recommender.fitAndTransform(input);
 List<ItemCorrelation> predicted = output.collect();
 for(ItemCorrelation cell : predicted){
  System.out.println("movie-correlation(" + cell.getItem1() + ", " + cell.getItem2() + "): " + cell.getPearson());
+}
+```
+
+## Recommend connection via mutual connections
+
+The sample code below shows how to recommend connections between two individual who do not know each other but might have mutual connections:
+
+```java
+List<Connection> connections = new ArrayList<>();
+connections.add(new Connection("Alice", Arrays.asList("Bob", "Dave"))); // Alice knows Bob and Dave
+connections.add(new Connection("Dave", Arrays.asList("Alice", "Carole")));
+connections.add(new Connection("Bob", Arrays.asList("James", "Alice", "Jim")));
+connections.add(new Connection("Jim", Arrays.asList("Bob", "Smith")));
+
+JavaSparkContext context = SparkContextFactory.createSparkContext("testing-1");
+JavaRDD<Connection> connectionJavaRDD = context.parallelize(connections);
+ConnectionRecommender recommender = new ConnectionRecommender();
+JavaRDD<ConnectionRecommendation> recommendationJavaRDD = recommender.fitAndTransform(connectionJavaRDD);
+
+List<ConnectionRecommendation> recommendations = recommendationJavaRDD.collect();
+
+for(ConnectionRecommendation recommendation : recommendations){
+ System.out.println(recommendation.getPerson1() + " can be connected to " + recommendation.getPerson2() + " via " + recommendation.getCommonFriends());
 }
 ```
