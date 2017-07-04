@@ -4,8 +4,11 @@ Package provides java implementation of big-data recommend-er using Apache Spark
 
 # Feature
 
+The recommender library contains implementation of correlation-based algorithms as well as latent factor analysis (e.g., content-based filtering and collaborative filtering)
+
 * Collaborative filtering recommender that predicts user's preference on unknown items using ALS-based gradient descent
 * Recommender that computes the correlation / similarity between items based on user preference using Pearson / Cosine / Jaccard correlation coefficient
+* Recommender that computes the correlation / similarity between users based on their preferences towards items using Pearson / Cosine / Jaccard correlation coefficient
 * Recommender that recommends a common friend to connect two persons who do not know each other but like to know each other (something similar to linkedIn connection)
 
 # Install
@@ -59,6 +62,42 @@ JavaRDD<UserItemRating> output = recommender.fitAndTransform(input);
 List<UserItemRating> predicted = output.collect();
 for(UserItemRating cell : predicted){
  System.out.println("predict(" + cell.getItem() + ", " + cell.getUser() + "): " + cell.getValue());
+}
+```
+
+## To find the correlation between any two users using their ratings on items:
+
+The sample code below tries to find the correlation between users based on their ratings over items. Can be used to recommend items to a customer based on how similar his preferences are to other customers:
+
+```java
+JavaSparkContext context = SparkContextFactory.createSparkContext("testing-1");
+
+RatingTable ratingTable =new RatingTable();
+ratingTable.addRating("Love at last", "Alice", 5);
+ratingTable.addRating("Remance forever", "Alice", 5);
+ratingTable.addRating("Nonstop car chases", "Alice", 0);
+ratingTable.addRating("Sword vs. karate", "Alice", 0);
+ratingTable.addRating("Love at last", "Bob", 5);
+ratingTable.addRating("Cute puppies of love", "Bob", 4);
+ratingTable.addRating("Nonstop car chases", "Bob", 0);
+ratingTable.addRating("Sword vs. karate", "Bob", 0);
+ratingTable.addRating("Love at last", "Carol", 0);
+ratingTable.addRating("Cute puppies of love", "Carol", 0);
+ratingTable.addRating("Nonstop car chases", "Carol", 5);
+ratingTable.addRating("Sword vs. karate", "Carol", 5);
+ratingTable.addRating("Love at last", "Dave", 0);
+ratingTable.addRating("Remance forever", "Dave", 0);
+ratingTable.addRating("Nonstop car chases", "Dave", 4);
+
+JavaRDD<UserItemRating> input = context.parallelize(ratingTable.getRatings());
+
+UserCorrelationRecommender recommender = new UserCorrelationRecommender();
+
+JavaRDD<UserCorrelation> output = recommender.fitAndTransform(input);
+
+List<UserCorrelation> predicted = output.collect();
+for(UserCorrelation cell : predicted){
+ System.out.println("user-correlation(" + cell.getUser1() + ", " + cell.getUser2() + "): " + cell.getPearson());
 }
 ```
 
